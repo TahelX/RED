@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+        h1 { text-align: center; }
+        .progress { height: 25px; border-radius: 5px; }
+        .progress-60 { background-color: yellow; }
+        .progress-75 { background-color: green; }
+        .note { color: red; }
+        .cancel { color: orange; } 
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>College Attendance Tracker</h1>
+        <form id="attendanceForm">
+            <label for="classDate">Class Date:</label>
+            <input type="datetime-local" id="classDate" required>
+            <label for="isCanceled">Class Cancelled:</label>
+            <input type="checkbox" id="isCanceled">
+            <label for="teacherAbsent">Teacher Absent:</label>
+            <input type="checkbox" id="teacherAbsent">
+            <button type="submit">Submit Attendance</button>
+        </form>
+        <div id="feedback"></div>
+        <div id="attendanceStatus"></div>
+    </div>
+    <script>
+        document.getElementById('attendanceForm').onsubmit = function(event) {
+            event.preventDefault();
+            const classDate = document.getElementById('classDate').value;
+            const isCanceled = document.getElementById('isCanceled').checked;
+            const teacherAbsent = document.getElementById('teacherAbsent').checked;
+            const feedback = document.getElementById('feedback');
+            let attendanceStatus = '';
+
+            if (isCanceled) {
+                attendanceStatus = '<div class="note">Class was cancelled.</div>';
+            }
+            if (teacherAbsent) {
+                attendanceStatus = '<div class="note">Teacher was absent.</div>';
+            }
+            let progress = calculateAttendanceProgress();
+            attendanceStatus += `<div id='progress' class='progress ${progress.class}'>Attendance Progress: ${progress.percentage}%</div>`;
+            feedback.innerHTML = attendanceStatus;
+        };
+
+        function calculateAttendanceProgress() {
+            // Example progress tracking logic based on attendance data
+            let totalClasses = 20;
+            let attendedClasses = 15; // This would be dynamic in a real app
+            let percentage = (attendedClasses / totalClasses) * 100;
+            let className = percentage >= 75 ? 'progress-75' : (percentage >= 60 ? 'progress-60' : '');
+            return { percentage: percentage.toFixed(2), class: className };
+        }
+    </script>
+</body>
+</html>
